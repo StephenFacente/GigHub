@@ -115,6 +115,11 @@ h6,
     border-radius: 9px;
 }
 
+.less-padding {
+    height: 41px;
+    padding: 5px 15px;
+}
+
 .form-control:focus {
     border-color: #2196f3;
     -webkit-box-shadow: none;
