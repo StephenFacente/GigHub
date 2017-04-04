@@ -1,6 +1,6 @@
 Pluralsight Course: Becoming a Full-Stack .NET Developer - Fundamentals
 
-This will be updated by following the course above.
+This will be updated as I follow the course above.
 
 GigHub is a mini social network that makes it really easy for live music lovers to track the gigs of their favorite artists. Artists can sign up and list their gigs which can then be followed by listeners.
 
