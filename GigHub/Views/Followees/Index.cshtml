@@ -1,0 +1,31 @@
+﻿@model IEnumerable<GigHub.Models.ApplicationUser>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Who I Follow</h1>
+<ul>
+    @foreach (var artist in Model)
+    {
+        <li>@artist.Name <button class="btn btn-link btn-sm js-toggle-follow" data-user-id="@artist.Id">Un-follow</button></li>
+    }
+</ul>
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $(".js-toggle-follow").click(function(e) {
+                var button = $(e.target);
+                $.post("/api/unfollowings", { followeeId: button.attr("data-user-id") })
+                    .done(function() {
+                        location.reload();
+                    })
+                    .fail(function() {
+                        alert("Something failed");
+                    });
+
+            });
+        });
+    </script>
+}
