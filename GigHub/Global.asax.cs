@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using GigHub.Controllers.Api;
+using GigHub.Dtos;
 using GigHub.Models;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using GigHub.Dtos;
 
 namespace GigHub
 {
@@ -18,6 +17,7 @@ namespace GigHub
                 cfg.CreateMap<ApplicationUser, UserDto>();
                 cfg.CreateMap<Gig, GigDto>();
                 cfg.CreateMap<Notification, NotificationDto>();
+                cfg.CreateMap<Genre, GenreDto>();
             });
             GlobalConfiguration.Configure(WebApiConfig.Register);
             AreaRegistration.RegisterAllAreas();
