@@ -15,6 +15,11 @@ namespace GigHub
                       "~/Scripts/respond.js",
                       "~/Scripts/bootbox.min.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                "~/Scripts/app/services/attendanceService.js",
+                "~/Scripts/app/controllers/gigsController.js",
+                "~/Scripts/app/app.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
