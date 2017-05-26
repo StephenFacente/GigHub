@@ -1,11 +1,13 @@
 using GigHub.Models;
+using GigHub.ViewModels;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
-namespace GigHub.ViewModels
+namespace GigHub.Controllers
 {
     public class HomeController : Controller
     {
@@ -21,6 +23,7 @@ namespace GigHub.ViewModels
             var upcomingGigs = _context.Gigs
                 .Include(g => g.Artist)
                 .Include(g => g.Genre)
+                .OrderBy(g => g.DateTime)
                 .Where(g => g.DateTime > DateTime.Now && !g.IsCanceled);
 
             if (!string.IsNullOrWhiteSpace(query))

@@ -29,6 +29,19 @@ namespace GigHub.Controllers.Api
                 .Include(n => n.Gig.Artist)
                 .ToList();
 
+            if (notifications.Count < 5)
+            {
+                foreach (var notification in _context.UserNotifications
+                .Where(un => un.UserId == userId && un.IsRead)
+                .Select(un => un.Notification)
+                .Include(n => n.Gig.Artist)
+                .Take(5 - notifications.Count)
+                .ToList())
+                {
+                    notifications.Add(notification);
+                }
+            }
+
             return notifications.Select(Mapper.Map<Notification, NotificationDto>);
         }
 

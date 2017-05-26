@@ -1,6 +1,8 @@
-﻿@model GigHub.ViewModels.GigsViewModel
+﻿@using Microsoft.AspNet.Identity
+@model GigHub.ViewModels.GigsViewModel
 @{
     ViewBag.Title = "Home Page";
+    var userId = User.Identity.GetUserId();
 }
 <h1>@Model.Heading</h1>
 @using (Html.BeginForm("Search", "Gigs"))
@@ -34,10 +36,10 @@
 
                     @if (gig.IsCanceled)
                     {
-                        <span class="label label-warning">Cancel</span>
+                        <span class="label label-warning">Canceled</span>
                     }
 
-                    @if (Model.ShowActions)
+                    @if (Model.ShowActions && gig.ArtistId != userId)
                     {
                         <button class="btn btn-link btn-sm js-toggle-follow" data-user-id="@gig.ArtistId">Follow</button>
                     }
@@ -45,7 +47,7 @@
                 <span class="genre">
                     @gig.Genre.Name
                 </span>
-                    @if (Model.ShowActions && !gig.IsCanceled)
+                    @if (Model.ShowActions && !gig.IsCanceled && gig.ArtistId != userId)
                     {
                         <button data-gig-id="@gig.Id" class="btn 
                                 @(Model.Attendances.Contains(gig.Id) ? "btn-info" : "btn-default")
