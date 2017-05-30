@@ -38,11 +38,6 @@
                     {
                         <span class="label label-warning">Canceled</span>
                     }
-
-                    @if (Model.ShowActions && gig.ArtistId != userId)
-                    {
-                        <button class="btn btn-link btn-sm js-toggle-follow" data-user-id="@gig.ArtistId">Follow</button>
-                    }
                 </span>
                 <span class="genre">
                     @gig.Genre.Name
@@ -51,7 +46,7 @@
                     {
                         <button data-gig-id="@gig.Id" class="btn 
                                 @(Model.Attendances.Contains(gig.Id) ? "btn-info" : "btn-default")
-                                btn-sm pull-right js-toggle-attendance">
+                                btn-sm js-toggle-attendance">
                             @(Model.Attendances.Contains(gig.Id) ? "Going" : "Going?")
                         </button>
                     }
