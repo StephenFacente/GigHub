@@ -1,7 +1,6 @@
-﻿using GigHub.Dtos;
-using GigHub.Models;
+﻿using GigHub.Core;
+using GigHub.Core.Dtos;
 using Microsoft.AspNet.Identity;
-using System.Linq;
 using System.Web.Http;
 
 namespace GigHub.Controllers
@@ -9,29 +8,27 @@ namespace GigHub.Controllers
     [Authorize]
     public class UnfollowingsController : ApiController
     {
-        private ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UnfollowingsController()
+        public UnfollowingsController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
         public IHttpActionResult Unfollow(FollowingDto dto)
         {
-            var userId = User.Identity.GetUserId();
+            var theFollowing = _unitOfWork.Followings.GetFollowing(User.Identity.GetUserId(), dto.FolloweeId);
 
-            if (_context.Followings.Any(f => f.FollowerId == userId && f.FolloweeId == dto.FolloweeId))
+            if (theFollowing == null)
             {
-                var theFollowing =
-                    _context.Followings.First(f => f.FollowerId == userId && f.FolloweeId == dto.FolloweeId);
-                _context.Followings.Remove(theFollowing);
-                _context.SaveChanges();
-
-                return Ok();
+                return NotFound();
             }
 
-            return BadRequest("Could not find the following");
+            _unitOfWork.Followings.Remove(theFollowing);
+            _unitOfWork.Complete();
+
+            return Ok();
         }
     }
 }

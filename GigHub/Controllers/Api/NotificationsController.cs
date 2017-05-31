@@ -1,10 +1,7 @@
-﻿using AutoMapper;
-using GigHub.Dtos;
-using GigHub.Models;
+﻿using GigHub.Core;
+using GigHub.Core.Dtos;
 using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Web.Http;
 
 namespace GigHub.Controllers.Api
@@ -12,50 +9,24 @@ namespace GigHub.Controllers.Api
     [Authorize]
     public class NotificationsController : ApiController
     {
-        private ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public NotificationsController()
+        public NotificationsController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
+            _unitOfWork = unitOfWork;
         }
 
         public IEnumerable<NotificationDto> GetNewNotifications()
         {
-            var userId = User.Identity.GetUserId();
-
-            var notifications = _context.UserNotifications
-                .Where(un => un.UserId == userId && !un.IsRead)
-                .Select(un => un.Notification)
-                .Include(n => n.Gig.Artist)
-                .ToList();
-
-            if (notifications.Count < 5)
-            {
-                foreach (var notification in _context.UserNotifications
-                .Where(un => un.UserId == userId && un.IsRead)
-                .Select(un => un.Notification)
-                .Include(n => n.Gig.Artist)
-                .Take(5 - notifications.Count)
-                .ToList())
-                {
-                    notifications.Add(notification);
-                }
-            }
-
-            return notifications.Select(Mapper.Map<Notification, NotificationDto>);
+            return _unitOfWork.Notifications.GetNewNotifications(User.Identity.GetUserId(), 5);
         }
 
         [HttpPost]
         public IHttpActionResult MarkAsRead()
         {
-            var userId = User.Identity.GetUserId();
-            var notifications = _context.UserNotifications
-                .Where(un => un.UserId == userId && !un.IsRead)
-                .ToList();
+            _unitOfWork.Notifications.MarkAsRead(User.Identity.GetUserId());
 
-            notifications.ForEach(n => n.Read());
-
-            _context.SaveChanges();
+            _unitOfWork.Complete();
 
             return Ok();
         }
